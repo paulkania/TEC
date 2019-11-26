@@ -1,3 +1,12 @@
+import pandas as pd
+# rep=['ERP','CRM']
+csv= ['Crm management', 'Cloud Erp', 'China', 'guns, germs, and steel', 'fourteen']
+df=pd.DataFrame({'col':csv})
+df.replace('Erp','ERP',inplace=True, regex=True)
+df.replace('Crm','CRM',inplace=True, regex=True)
+
+print(df)
+
 #ReadMe
 #1  save as excel worksheet - otherwise (CSV, CSV-DOS, etc.) a warning will throw, so might as well not reformat.
 #2  If output excel sheet is open, and you try to run script again, error 'No13 - Permission Denied' will be thrown
