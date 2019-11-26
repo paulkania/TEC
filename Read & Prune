@@ -1,0 +1,45 @@
+#ReadMe
+#1  save as excel worksheet - otherwise (CSV, CSV-DOS, etc.) a warning will throw, so might as well not reformat.
+#2  If output excel sheet is open, and you try to run script again, error 'No13 - Permission Denied' will be thrown
+
+import pandas as pd
+import os
+# import csv
+
+
+os.chdir(r"C:\Users\prozehnal\Desktop\csv_house\csv") #changes to correct directory from absolute reference
+
+# print(os.getcwd(),'<--current directory') #prints current directory to ensure you're in the right folder
+# print(os.listdir(os.getcwd()),'<----files in current dir') #lists files in current directory
+# x= input('type_file_name_with_extension')
+inp_data= pd.read_csv('dental.csv',usecols=[0],verbose=True) #potentially useful: skipinitialspace, squeeze,verbose
+print('\n\n')
+
+myl=inp_data["Features"].tolist()
+# print('myl',len(myl),myl)
+
+s=sorted(myl)
+# print('s',len(s),s)
+
+t=[str.title(i) for i in s]
+# print(len(t) , t)
+
+mset=sorted(set(t))
+
+
+l0= len(t)
+lf=len(mset)
+dif = len(t)-len(mset)
+perc_inc= (1-len(mset)/len(t))*(100),"percent improvement"
+
+print(l0,lf,dif, perc_inc,mset)
+
+df=pd.DataFrame(mset) #index in the future to avoid outputting number column?
+
+df.to_csv(r"C:\Users\prozehnal\Desktop\csv_house\csv\outputB.csv")
+
+# print(csv.list_dialects())
+
+# l=['here we','live in A SocIEt', 'yyyyy,''HNEO']
+# m=str.title(l)
+# print(l,m)
