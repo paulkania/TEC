@@ -1,0 +1,12 @@
+import pandas as pd
+import os
+# import csv
+
+
+os.chdir(r"C:\Users\prozehnal\Desktop\csv_house\csv")
+#print(os.getcwd(),'<--current directory')
+#print(os.listdir(os.getcwd()),'<----files in current dir')
+
+inp_data= pd.read_csv('outputB.csv',usecols=[1],verbose=False)
+
+print(inp_data)
