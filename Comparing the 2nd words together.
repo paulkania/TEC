@@ -1,0 +1,13 @@
+csv= ['Crm management', 'Cloud Erp', 'China', 'Cloud Dungeon', 'guns, germs, and steel', 'fourteen']
+
+b=[]
+for i in csv:
+    a=i.split(' ')
+    b.append(a)  
+    
+n=1
+for i in range(len(b)):
+    for j in range(n,len(b)):
+        if len(b[i])>1:
+            print(b[i][1])
+    n+=1
