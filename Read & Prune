@@ -16,7 +16,7 @@ print(os.listdir(os.getcwd()),'<----files in current dir') #lists files in curre
 print('\n\n')
 
 #input -> output data manipulation
-inp_data= pd.read_csv('hr.csv',usecols=[0],verbose=False) #potentially useful: skipinitialspace, squeeze,verbose
+inp_data= pd.read_csv('callc.csv',usecols=[0],verbose=False) #potentially useful: skipinitialspace, squeeze,verbose
 inp_data=inp_data["Features"].tolist()
 titled_data_l=[str.title(i) for i in inp_data]
 # titled_data_l_ps=list(set(titled_data_l))
@@ -34,19 +34,36 @@ df.replace('Cpa','CPA',inplace=True, regex=True)
 df.replace('Ssl','SSL',inplace=True, regex=True)
 df.replace('Fmla','FMLA',inplace=True, regex=True)
 df.replace('Fsa','FSA',inplace=True, regex=True)
+df.replace('Ai','AI',inplace=True, regex=True)
+df.replace('Id','ID',inplace=True, regex=True)
+df.replace('Voip','VOIP',inplace=True, regex=True)
+
 
 
 #levenshtein display (no edit to output yet)
 #change titled_data_l to df in order to compare acronyms, though that doesn't actually
 #matter and is more bikeshedding than anything
+fillup=[]
 for i,j in zip(range(0,len(titled_data_l)-1), range(1,len(titled_data_l))):
     a=sd.levenshtein(titled_data_l[i],titled_data_l[j])
-    if a<10 and len(titled_data_l[i])>2:
-        print(titled_data_l[i],'AND',titled_data_l[j],a)
+    if a<10 and len(titled_data_l[i])>4 and len(titled_data_l[j])>4:
+        fillup.extend([a,titled_data_l[i],'&',titled_data_l[j]])
+fup=[]
+for i in range(0, len(fillup), 4):
+     fup.append(fillup[i : i+4])
+fup=sorted(fup)
+for i in range(len(fup)):
+    print(fup[i]) #lines fup=[] to here are just so that the list is ordered. I first had to use extend, instead of
+                    #append, so that i could add multiple elements to the list at a time
+                    #then i used append to a new list to get a list of lists, each sublist contains an entry.
+                    #then i sorted it, the last for loop is just to print more beautifully
+
+
+
 
 #------^-data manip-^-------v-datadisplay-v
 
-#counter function - create a user-defined version i future
+# counter function - create a user-defined version i future
 print('\n'*5)
 counted=Counter(titled_data_l)
 for i in counted:
@@ -57,9 +74,8 @@ for i in counted:
 l_input_data= len(inp_data)
 l_set_data=len(setted_data_s)
 dif = l_input_data-l_set_data
-print(type(dif),type(l_set_data))
 perc_inc= round((dif*100)/(l_input_data),2),"percent improvement"
-print(l_input_data,dif,l_set_data,'replacement(s)',perc_inc)
+print(l_input_data,dif,l_set_data,'replacement(s)')#,perc_inc)
 
 #sort andsave output somewhere
 #df.sort_values(by=[0])
