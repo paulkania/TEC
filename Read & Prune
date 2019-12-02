@@ -1,6 +1,9 @@
 #ReadMe
 #1  save as excel worksheet - otherwise (CSV, CSV-DOS, etc.) a warning will throw, so might as well not reformat.
 #2  If output excel sheet is open, and you try to run script again, error 'No13 - Permission Denied' will be thrown
+#TODO
+#1beautify  dictionary, or change title() fn so that it checks whether a substring isupper(). if false, title.
+#2 for 'geo-target v geotarget' split('-') then concatenate then set? then revert to replace the removed '-' that had no effect?
 
 
 #import libraries
