@@ -1,0 +1,23 @@
+#this may be able to help creating a more accurate flat list, so that you can do caps control stuff.
+
+
+import pandas as pd
+import os
+from collections import Counter
+import stringdist as sd
+import jellyfish as jlfsh
+
+#show current directory and files in current directory
+os.chdir(r"C:\Users\prozehnal\Desktop\csv_house\csv") #changes to correct directory from absolute reference
+print(os.getcwd(),'<--current directory') #prints current directory to ensure you're in the right folder
+print(os.listdir(os.getcwd()),'<----files in current dir') #lists files in current directory
+print('\n\n')
+
+#input -> output data manipulation
+inp_data= pd.read_csv('seo.csv',usecols=[0],verbose=False) #potentially useful: skipinitialspace, squeeze,verbose
+inp_data=inp_data["Features"].tolist()
+
+inp_data.replace(' ','@')
+inp_data= [i.replace(' ','@') for i in inp_data]
+print(inp_data)
+print(inp_data)
