@@ -20,10 +20,15 @@ print('\n\n')
 inp_data= pd.read_csv('seo.csv',usecols=[0],verbose=False) #potentially useful: skipinitialspace, squeeze,verbose
 inp_data=inp_data["Features"].tolist()
 
+print('000',inp_data)
 i_l=[]
 for i in inp_data:
     i=i.split()
     i_l.append(i)
+
+print('111',i_l)
+flat_l=[item for sublist in i_l for item in sublist]
+print(222,flat_l)
 
 temp_l=[]
 combined_l=[]
@@ -39,28 +44,31 @@ for i in i_l:
             combined_l.append(temp_l)
             temp_l=[]
 
-for i,j in zip(range(0,len(soundex_l)-1), range(1,len(soundex_l))):
-    # print(i,j,soundex_l[i],soundex_l[j],len(soundex_l[i]),len(soundex_l[j]))
-    # if len(soundex_l[i]) != len(soundex_l[j]):#probably not strictly necessary
-    for el in range( min(len(soundex_l[i]), len(soundex_l[j]))):
-        print(inp_data[i],'&',inp_data[j],soundex_l[i][el],soundex_l[j][el],'thund3r')
+# for i,j in zip(range(0,len(soundex_l)-1), range(1,len(soundex_l))):
+#     # print(i,j,soundex_l[i],soundex_l[j],len(soundex_l[i]),len(soundex_l[j]))
+#     # if len(soundex_l[i]) != len(soundex_l[j]):#probably not strictly necessary
+#     for el in range( min(len(soundex_l[i]), len(soundex_l[j]))):
+        # print(inp_data[i],'&',inp_data[j],soundex_l[i][el],soundex_l[j][el],'thund3r')
         #print('ld',jlfsh.damerau_levenshtein_distance(soundex_l[i][el], soundex_l[j][el]))
         #print('jaro',jlfsh.jaro_distance(soundex_l[i][el], soundex_l[j][el]))
-        print('hamming',jlfsh.hamming_distance(soundex_l[i][el], soundex_l[j][el]))
-        print()
+        # print('hamming',jlfsh.hamming_distance(soundex_l[i][el], soundex_l[j][el]))
+        # print()
 #what I'm seeing is that the soundex tokens aren't good indicators of similarity.
 #therefore i'll move on, look at the notebook and see what's good.
 #maybe i'll try to amalgamate these to programs.
 #where it was useful was below..in accounting for special characters.
 
+# print(123,soundex_l)
+
 for i,j in zip(range(0,len(soundex_l)-1), range(1,len(soundex_l))):
-    # print(soundex_l[i],soundex_l[j])
-    if soundex_l[i]==soundex_l[j]:
-        print(soundex_l[i],'&&&',soundex_l[j])
-        soundex_l.remove(soundex_l[i]) ###investigate soundex_l
-        print('eee',inp_data[i])
-        inp_data.remove(inp_data[i])
-        continue
+    print(soundex_l[i],soundex_l[j])
+    # if soundex_l[i]==soundex_l[j]:
+    #     # print(soundex_l[i],'&&&',soundex_l[j])
+    #     soundex_l.remove(soundex_l[i]) ###investigate soundex_l
+    #     # print('eee',inp_data[i])
+    #     inp_data.remove(inp_data[i])
+    #     continue
+# print(321,soundex_l)
 
     # print('altt',i,j,soundex_l[i],soundex_l[j],len(soundex_l[i]),len(soundex_l[j]))
     # # soundex_l[i] = soundex_l[j]
