@@ -17,6 +17,10 @@ print(inp_data)
 
 i_spec_data= [i.replace(' ','@') for i in inp_data]
 print(i_spec_data)
+#'@' -> 'space' by doing i.replace('@',' ')
+
+
+
 
 
 inp_data = [i.split() for i in inp_data]
