@@ -1,8 +1,12 @@
+###I need to scrape we
+
 import pandas as pd
 import os
 from collections import Counter
 import stringdist as sd
 import jellyfish as jlfsh
+import codecs
+import re
 
 #show current directory and files in current directory
 os.chdir(r"C:\Users\prozehnal\Desktop\csv_house\csv") #changes to correct directory from absolute reference
@@ -11,35 +15,59 @@ print(os.listdir(os.getcwd()),'<----files in current dir') #lists files in curre
 print('\n\n')
 
 #input -> output data manipulation
-inp_data= pd.read_csv('seo.csv',usecols=[0],verbose=False) #potentially useful: skipinitialspace, squeeze,verbose
+# inp_data= pd.read_csv('A1.csv',usecols=[0],verbose=False) #potentially useful: skipinitialspace, squeeze,verbose
+# inp_data=inp_data["Features"].tolist()
+inp_data= pd.read_csv('A1.csv',encoding ='iso-8859-1',usecols=[0])
 inp_data=inp_data["Features"].tolist()
-print(inp_data)
 
-i_spec_data= [i.replace(' ','@') for i in inp_data]
-print(i_spec_data)
-#'@' -> 'space' by doing i.replace('@',' ')
+print(type(inp_data))
+print(inp_data[500])
 
-
-
-
-
-inp_data = [i.split() for i in inp_data]
-print(inp_data)
-
-
-#scraping data for caps-locked acronyms. PASS
-caps_list = []
+cleaned_l=[]
 for i in inp_data:
-    for element in i:
-        if element.isupper():
-            caps_list.append(element)
-print(list(set(caps_list)))
+    j=re.sub('\W+,%',' ',i)
+    cleaned_l.append(j)
 
-#i knew it wouldn't work, because each element is now considered a letter, rather than a word, since there are no spaces.
-#testing isupper with @combination. FAIL
-c=[]
-for i in i_spec_data:
+print(cleaned_l)
+print(len(cleaned_l))
+
+
+# print(inp_data)
+#             i_spec_data= [i.replace(' ','@') for i in inp_data]
+#             print(i_spec_data)
+#             '@' -> 'space' by doing i.replace('@',' ')
+#
+# below block shows how i.split() and " ".join(i) are two best bros, ying and yang.
+# inp_data = [i.split() for i in inp_data]
+#         print('33',inp_data)
+
+# a1=[]
+# for i in inp_data:
+#     j= " ".join(i)
+#     # print(j)
+#     a1.append(j)
+        # print(a1)
+
+# scraping data for caps-locked acronyms. FAIL
+#Reason: element should produce word in the substring, not char in the substring.
+caps_list = []
+for i in cleaned_l:
+    # print(i)
     for element in i:
-        if element.isupper():
-            c.append(element)
-print(c)
+        print(element)
+#         if element.isupper():
+#             caps_list.append(element)
+# caps_list = (list(set(caps_list)))
+# df=pd.DataFrame(caps_list)
+# print(df)
+# df.to_csv(r"C:\Users\prozehnal\Desktop\csv_house\csv\outputcaps.csv")
+
+
+            #i knew it wouldn't work, because each element is now considered a letter, rather than a word, since there are no spaces.
+            #testing isupper with @combination. FAIL
+            # c=[]
+            # for i in c:
+            #     for element in i:
+            #         if element.isupper():
+            #             c.append(element)
+            # print(c)
