@@ -116,19 +116,19 @@ j='A330'
 print(df[0][4])
 for i in range(len(df[0])-1):
     j=df[0][i+1]
-    print('iii',i)
+    # print('iii',i)
     if jlfsh.damerau_levenshtein_distance(df[0][i], j) <3:
         print(df[0][i],j)
         dupe.append(df['index'][i]+' '+df[0][i])#+df[0][j])
         j=df[0][i-1]
-        
+
 print('dupe',dupe)
 #
 
 #itertools
 # dupes=[]
-# for i, token,combos in itertools.combinations(df[0],2):
-#     print('1000',token,combos)
+for token,combos in itertools.combinations(df[0],2):
+    print('1000',token,combos)
 #     if token is not None and combos is not None:
 #         d_ld= jlfsh.damerau_levenshtein_distance(token, combos)
 #         # print(df[0])
