@@ -44,111 +44,40 @@ for i in i_l:
             combined_l.append(temp_l)
             temp_l=[]
 
-#this block makes no alteration in data.
-#it only compares sound-token elements together, and compares there similarity.
-#see conclusion below
-close_ld=[]
-for i,j in zip(range(0,len(soundex_l)-1), range(1,len(soundex_l))):
-    # print('RESSSET',i,j,soundex_l[i],soundex_l[j],len(soundex_l[i]),len(soundex_l[j]))
+# print(len(soundex_l),soundex_l)
+# print(len(i_l),i_l)
+# print(len(combined_l),combined_l)
+def flattener(ilist):
+    o=[]
+    for i in ilist:
+        j= " ".join(i) #join replaces commas with " " j = i.replace(',',' ') DOES not work, i believe replace only works within a string, rather than between strings. #str.replace == str.split().join()
+        # print(j)
+        o.append(j)
+    return o
+inp_flat=flattener(i_l)
+# print(1231231,flattener(i_l))
+sound_flat=flattener(soundex_l)
+# print(999,flattener(soundex_l))
 
-    # if len(soundex_l[i]) != len(soundex_l[j]):#probably not strictly necessary
-    ld=0
-    for el in range( min(len(soundex_l[i]), len(soundex_l[j]))):
-        # print(inp_data[i],'&',inp_data[j],soundex_l[i][el],soundex_l[j][el],'thund3r')
-        ld_el= jlfsh.damerau_levenshtein_distance(soundex_l[i][el], soundex_l[j][el])
-        # print('ld',jlfsh.damerau_levenshtein_distance(soundex_l[i][el], soundex_l[j][el]))
-        # print('jaro',jlfsh.jaro_distance(soundex_l[i][el], soundex_l[j][el]))
-        # print('hamming',jlfsh.hamming_distance(soundex_l[i][el], soundex_l[j][el]))
-        ld+= ld_el
-        if ld<4:
-            close_ld.extend(inp_data[i])
-            close_ld.extend(inp_data[j])
-        # print()
+################################# print(dir(dict()))
+hashmap = {}
+print(type(hashmap))
+for i in range(len(soundex_l)): #soundex_l and all the others all have the same lengths.
+    hashmap.update({inp_flat[i]:sound_flat[i]}) #damn colon gave me issues
 
-# print(close_ld)
+for k,v in hashmap.items():
+    print (k,'and',v)
+
+for a in hashmap.keys():
+    print (a)
+
+for b in hashmap.values():
+    print (b)
 
 
-###remove duplicates (geotargetting, google ad thing)
-r_iter=0
-for i,j in zip(range(0,len(soundex_l)-1), range(1,len(soundex_l))):
-    if soundex_l[i]==soundex_l[j]:
-        r_iter+=1
-for i,j in zip(range(0,len(soundex_l)-r_iter-1), range(1,len(soundex_l)-r_iter)):
-    if soundex_l[i]==soundex_l[j]:
-        r_iter+=1
-        # print(soundex_l[i],'&&&',soundex_l[j],i_l[i],'+++',i_l[j])
-        i_l.remove(i_l[i])
-        soundex_l.remove(soundex_l[i])
-        # print('item removed',i_l)
 
-#this block is great. it takes a nested list of
-    #strings which are within the list separated by commas.
-        #it then joins the separate strings together, spaced by a space in this case
-        #and appended to a new list.
-# print('markin',i_l[0],i_l[0][0],i_l) #granularity is by word
-i_l_out=[]
-for i in i_l:
-    j= " ".join(i) #join replaces commas with " " j = i.replace(',',' ') DOES not work, i believe replace only works within a string, rather than between strings. #str.replace == str.split().join()
-    # print(j)
-    i_l_out.append(j)
-# print('markout',i_l_out[0],i_l_out) #granularity is by letter
-# print(len(i_l_out),len(inp_data),len(i_l),len(soundex_l),type(inp_data),type(i_l))
 
-dicto=dict(zip(i_l_out,soundex_l))
-print(dicto)
-
-df=pd.DataFrame.from_dict(dicto,orient='index')
-# print(len(df),'\n\n\n',df)
-# print(df.loc[:,0])
-
-# print(df[0],df[1],df[2],df[3],df[4]) # turns index into a column of it's own, new index is a numbered index (0->42,len=43)
-
-#iamlegend
-# print(df[0:5]) #first 5 rows all columns
-# print(df['index'][1]) #gives first column...must include ' '
-# print(df[0]) #gives first column...must include ' '
-df.reset_index(inplace=True)
-df.reset_index(inplace=True)
-
-print(df)
-dupe=[]
-j='A330'
-print(df[0][4])
-for i in range(len(df[0])-1):
-    j=df[0][i+1]
-    # print('iii',i)
-    if jlfsh.damerau_levenshtein_distance(df[0][i], j) <3:
-        print(df[0][i],j)
-        dupe.append(df['index'][i]+' '+df[0][i])#+df[0][j])
-        j=df[0][i-1]
-
-print('dupe',dupe)
 #
-
-#itertools
-# dupes=[]
-for token,combos in itertools.combinations(df[0],2):
-    print('1000',token,combos)
-#     if token is not None and combos is not None:
-#         d_ld= jlfsh.damerau_levenshtein_distance(token, combos)
-#         # print(df[0])
-#         if d_ld>1:
-#             continue
-#         else:
-#             # print(token,'<',combos,'>',d_ld) #df['index'][token]
-#             # dupes.append(token+' '+combos) #df['index']
-#             for token,combos in itertools.combinations(df[1],2):
-#                 if token is not None and combos is not None:
-#                     d_ld= jlfsh.damerau_levenshtein_distance(token, combos)
-#                     if d_ld>1:
-#                         continue
-#                     else:
-#                         print(token,combos,d_ld)
-#                         dupes.append(token+' '+combos) #df['index']
-# print('MARKOUT',len(dupes),dupes)
-
-
-
-# for i in range(len(df)):
-#     print(df[0])
-df.to_csv(r"C:\Users\prozehnal\Desktop\csv_house\csv\outputSoundex.csv")
+#
+# for i,k in hashmap:
+#     print(i,k)
