@@ -119,8 +119,7 @@ l3= [el for el in inp_flat if el not in lrefined]
 print(8787878,len(l3),l3)
 
 
-# print('yoyoyo',ans/,qans)
-print('hailmary', bans)
+
 print(len(inp_flat),inp_flat)
 print(allcombinations[0][0][0])
 print(allcombinations[0][0])
