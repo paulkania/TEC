@@ -1,0 +1,131 @@
+#ReadMe
+#1  save as excel worksheet - otherwise (CSV, CSV-DOS, etc.) a warning will throw, so might as well not reformat.
+#2  If output excel sheet is open, and you try to run script again, error 'No13 - Permission Denied' will be thrown
+
+#import libraries
+import pandas as pd
+import os
+from collections import Counter
+import stringdist as sd
+import jellyfish as jlfsh
+import itertools
+import csv
+
+#show current directory and files in current directory
+os.chdir(r"C:\Users\prozehnal\Desktop\csv_house\csv") #changes to correct directory from absolute reference
+print(os.getcwd(),'<--current directory') #prints current directory to ensure you're in the right folder
+print(os.listdir(os.getcwd()),'<----files in current dir') #lists files in current directory
+print('\n\n')
+
+#input -> output data manipulation
+inp_data= pd.read_csv('ecomm.csv',usecols=[0],verbose=False) #potentially useful: skipinitialspace, squeeze,verbose
+inp_data=inp_data["Features"].tolist()
+
+i_l=[]
+for i in inp_data:
+    i=i.split()
+    i_l.append(i)
+
+
+temp_l=[] #temp holds soundex values to match length of elements, so each element is soundexed.
+combined_l=[] #sublist of combined string and soundex.
+soundex_l=[]
+# print(i_l,i_l[0])
+for i in i_l:
+    for element in range(len(i)):
+        jellied = jlfsh.soundex(i[element])
+        temp_l.append(jellied)
+        if len(temp_l)==len(i):
+            soundex_l.append(temp_l)
+            combined_l.append(i)
+            combined_l.append(temp_l)
+            temp_l=[]
+print()
+# print(len(soundex_l),soundex_l)
+# print(len(i_l),i_l)
+# print(len(combined_l),combined_l)
+def flattener(ilist):
+    o=[]
+    for i in ilist:
+        j= " ".join(i) #join replaces commas with " " j = i.replace(',',' ') DOES not work, i believe replace only works within a string, rather than between strings. #str.replace == str.split().join()
+        # print(j)
+        o.append(j)
+    return o
+inp_flat=flattener(i_l)
+# print(1231231,flattener(i_l))
+sound_flat=flattener(soundex_l)
+# print(999,flattener(soundex_l))
+# with open('your_file.txt', 'w') as f:
+#     for item in my_list:
+#         f.write("%s\n" % item)
+
+def txtsaver(title,yourdict):
+    with open(title, "w") as f:
+        for place, item in enumerate(yourdict):
+            f.write('%s\n' % item)
+            if place%3==0:
+                f.write('\n')
+
+
+    # f= open(title,"w")
+    # f.write(str(yourdict))
+    # f.close()
+    # return None #optional
+def csvsaver(title,yourdict):
+    file = open(title,'w')
+    f= csv.writer(file,  lineterminator = '\n')
+    for k,v in yourdict.items():
+        f.writerow([k,v])
+
+def dict_creator_w_variable_length(slice, list_length, keys, values):
+    hashmap = {}
+    x=0
+    for i in range(len(list_length)): #soundex_l and all the others all have the same lengths.
+        x+=1
+        hashmap.update({keys[i]:values[i]}) #damn colon gave me issues
+        if x==slice: #make slice == list_length if you want full list
+            return hashmap
+
+wholedict=dict_creator_w_variable_length(len(soundex_l),soundex_l,inp_flat,sound_flat)
+tidbit= dict_creator_w_variable_length(12,soundex_l,inp_flat,sound_flat)
+print(tidbit)
+#####using dict values
+lrefined = {}
+allcombinations= list(itertools.combinations(tidbit.items(),2))
+for i in allcombinations:
+    levend = sd.levenshtein(i[0][1],i[1][1])
+    # print(levend,i[0][1],i[1][1])
+    if levend <5:
+        print(i[0],i[1])
+        lrefined.update(i)
+
+lrefined = []
+allcombinations= list(itertools.combinations(tidbit.items(),2))
+for i in allcombinations:
+    levend = sd.levenshtein(i[0][1],i[1][1])
+    # print(levend,i[0][1],i[1][1])
+    if levend <5:
+        print(i[0],i[1])
+        lrefined.append(i[0][0])
+
+print(lrefined)
+print()
+# print(tidbit.items())
+print()
+txtsaver("waves.txt",inp_flat)
+print(set(lrefined))
+
+l3= [el for el in inp_flat if el not in lrefined]
+print(8787878,len(l3),l3)
+
+
+# print('yoyoyo',ans/,qans)
+print('hailmary', bans)
+print(len(inp_flat),inp_flat)
+print(allcombinations[0][0][0])
+print(allcombinations[0][0])
+print(allcombinations[0])
+print(allcombinations)
+
+
+# csvsaver("paullllll.csv",lrefined)
