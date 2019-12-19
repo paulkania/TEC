@@ -1,4 +1,11 @@
 #ReadMe
+#ideas - split input list into 26 lists, each per alphabet, and delete symbolic starts
+            #from there possible combinations is much less.
+            #try for 'A'
+
+
+
+
 #1  save as excel worksheet - otherwise (CSV, CSV-DOS, etc.) a warning will throw, so might as well not reformat.
 #2  If output excel sheet is open, and you try to run script again, error 'No13 - Permission Denied' will be thrown
 
