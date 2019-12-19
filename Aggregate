@@ -11,26 +11,25 @@ import jellyfish as jlfsh
 import itertools
 import csv
 
+
 #show current directory and files in current directory
 os.chdir(r"C:\Users\prozehnal\Desktop\csv_house\csv") #changes to correct directory from absolute reference
-print(os.getcwd(),'<--current directory') #prints current directory to ensure you're in the right folder
-print(os.listdir(os.getcwd()),'<----files in current dir') #lists files in current directory
-print('\n\n')
+# print(os.getcwd(),'<--current directory') #prints current directory to ensure you're in the right folder
+# print(os.listdir(os.getcwd()),'<----files in current dir') #lists files in current directory
+# print('\n\n')
 
 #input -> output data manipulation
-inp_data= pd.read_csv('ecomm.csv',usecols=[0],verbose=False) #potentially useful: skipinitialspace, squeeze,verbose
+#boss_lvl == 'all_radu_c.csv'
+inp_data= pd.read_csv('ecomm.csv',encoding = 'unicode_escape',usecols=[0],verbose=False) #potentially useful: skipinitialspace, squeeze,verbose
 inp_data=inp_data["Features"].tolist()
 
-i_l=[]
-for i in inp_data:
-    i=i.split()
-    i_l.append(i)
+i_l= [i.split() for i in inp_data]
 
 
 temp_l=[] #temp holds soundex values to match length of elements, so each element is soundexed.
 combined_l=[] #sublist of combined string and soundex.
 soundex_l=[]
-# print(i_l,i_l[0])
+
 for i in i_l:
     for element in range(len(i)):
         jellied = jlfsh.soundex(i[element])
@@ -40,10 +39,8 @@ for i in i_l:
             combined_l.append(i)
             combined_l.append(temp_l)
             temp_l=[]
-print()
-# print(len(soundex_l),soundex_l)
-# print(len(i_l),i_l)
-# print(len(combined_l),combined_l)
+
+
 def flattener(ilist):
     o=[]
     for i in ilist:
@@ -51,80 +48,95 @@ def flattener(ilist):
         # print(j)
         o.append(j)
     return o
+
 inp_flat=flattener(i_l)
-# print(1231231,flattener(i_l))
 sound_flat=flattener(soundex_l)
-# print(999,flattener(soundex_l))
-# with open('your_file.txt', 'w') as f:
-#     for item in my_list:
-#         f.write("%s\n" % item)
 
 def txtsaver(title,yourdict):
-    with open(title, "w") as f:
+    with open(title, mode="w", encoding="iso-8859-1") as f:
         for place, item in enumerate(yourdict):
             f.write('%s\n' % item)
-            if place%3==0:
+            if (place+1)%4==0:
                 f.write('\n')
 
 
-    # f= open(title,"w")
-    # f.write(str(yourdict))
-    # f.close()
-    # return None #optional
-def csvsaver(title,yourdict):
+def csvsaver(title,yourdict): #notused
     file = open(title,'w')
     f= csv.writer(file,  lineterminator = '\n')
     for k,v in yourdict.items():
         f.writerow([k,v])
 
-def dict_creator_w_variable_length(slice, list_length, keys, values):
+def dict_creator_w_variable_length(numberofloops,list_length, keys, values):
     hashmap = {}
     x=0
-    for i in range(len(list_length)): #soundex_l and all the others all have the same lengths.
-        x+=1
+
+    for i in range(len(list_length)):
+        if x== numberofloops:
+            return hashmap#soundex_l and all the others all have the same lengths.
         hashmap.update({keys[i]:values[i]}) #damn colon gave me issues
-        if x==slice: #make slice == list_length if you want full list
-            return hashmap
+        x+=1
+    return hashmap
 
-wholedict=dict_creator_w_variable_length(len(soundex_l),soundex_l,inp_flat,sound_flat)
-tidbit= dict_creator_w_variable_length(12,soundex_l,inp_flat,sound_flat)
-print(tidbit)
-#####using dict values
-lrefined = {}
-allcombinations= list(itertools.combinations(tidbit.items(),2))
-for i in allcombinations:
-    levend = sd.levenshtein(i[0][1],i[1][1])
-    # print(levend,i[0][1],i[1][1])
-    if levend <5:
-        print(i[0],i[1])
-        lrefined.update(i)
-
-lrefined = []
-allcombinations= list(itertools.combinations(tidbit.items(),2))
-for i in allcombinations:
-    levend = sd.levenshtein(i[0][1],i[1][1])
-    # print(levend,i[0][1],i[1][1])
-    if levend <5:
-        print(i[0],i[1])
-        lrefined.append(i[0][0])
-
-print(lrefined)
-print()
-# print(tidbit.items())
-print()
-txtsaver("waves.txt",inp_flat)
-print(set(lrefined))
-
-l3= [el for el in inp_flat if el not in lrefined]
-print(8787878,len(l3),l3)
-
-
-
-print(len(inp_flat),inp_flat)
-print(allcombinations[0][0][0])
-print(allcombinations[0][0])
-print(allcombinations[0])
+# print(combined_l)
+d_word_tok=dict_creator_w_variable_length(len(inp_flat),soundex_l,inp_flat,sound_flat)
+print(3423424234,d_word_tok)
+# drefined = {} #gives dict of word:token
+allcombinations= list(itertools.combinations(d_word_tok.items(),2))
 print(allcombinations)
+drefined=[]
+allfirstlettercombinations =[]
+for i in allcombinations:
+    # print(i, i[0][0][0:3],i[1][0][0:3])
+    if i[0][0][0:3] == i[1][0][0:3]:
+        allfirstlettercombinations.append(i)
 
+difference_small=[] #im going to take the terms which are very close to each other's token leven-distances, append them to this list.
+                            #from there i will subtract the original list from this list. l3= inp_flat - difference_small
+for i in allfirstlettercombinations:
+        print(i,sd.levenshtein(i[0][0],i[1][0]),sd.levenshtein(i[0][1],i[1][1]))
+        if sd.levenshtein(i[0][1],i[1][1]) < 9:
+            difference_small.append(i[0][0])
 
-# csvsaver("paullllll.csv",lrefined)
+print('difference',len(set(difference_small)),set(difference_small))
+print('inp list',len(inp_flat),inp_flat)
+final_l = [item for item in inp_flat if item not in difference_small]
+# fml= difference_small - inp_flat
+# [item for item in x if item not in y]
+print('last',len(final_l),final_l)
+final_l=sorted(final_l)
+txtsaver("waves1.txt",inp_flat)
+txtsaver("waves2.txt",final_l)
+# for i in allcombinations:
+#     levend = sd.levenshtein(i[0][1],i[1][1])
+#     # if levend >6:
+#     print(levend,i[0][1],i[1][1],555,i[1][1][0])
+#     drefined.append(i[0][0])
+#     drefined.append(i[1][0])
+# print(len(drefined),drefined)
+# print(3423424234,len(d_word_tok),d_word_tok)
+# print(len(set(drefined)),set(drefined))
+#since im taking all combinations, they are about to find one comparison that the levend is above or below any threshold, so this doesnt work.
+    #what i have to do is compare all combinations of entries that start with the same letter only. i[][][00000]
+
+# lrefined = []
+# allcombinations= list(itertools.combinations(dinp_sound.items(),2))
+# for i in allcombinations:
+#     levend = sd.levenshtein(i[0][1],i[1][1])
+#     if levend >7:
+#         # print(i[0],i[1])
+#         lrefined.append(i[0][0])
+
+# print(2,len(lrefined),lrefined)
+# print(4,len(set(lrefined)),set(lrefined))
+# print(3,len(wholedict),wholedict)
+# print(3,len(tidbit),tidbit)
+
+# print()
+# # print(tidbit.items())
+# print()
+# txtsaver("waves.txt",inp_flat)
+#
+# l3= [el for el in inp_flat if el not in lrefined]
+# print(1,len(set(lrefined)),set(lrefined))
+# print(8787878,len(l3),l3)
+# print(3,len(inp_flat),inp_flat)
